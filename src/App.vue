@@ -13,6 +13,9 @@ import AppLoader from '@apotome/archetype-shared/components/AppLoader.vue'
 import ThemeSwitcher from '@apotome/archetype-shared/components/ThemeSwitcher.vue'
 
 const { initFromConfig } = useSiteTheme()
+
+/* Title, description, cards and JSON-LD follow the route table (src/routes.ts)
+   through installSeo in main.ts; the build wrote the same tags per page. */
 const { isReady, progress, loaded, total, label, preloadCritical } = useImagePreload()
 
 onMounted(async () => {

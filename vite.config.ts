@@ -5,6 +5,9 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 
+// SEO (head, JSON-LD, sitemap, robots, llms.txt, prerendered pages) is the
+// postbuild step in scripts/prerender.ts, not a Vite plugin: see src/routes.ts.
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -19,6 +22,9 @@ export default defineConfig({
   ],
   // Read .env.local from the monorepo root so all templates share one file.
   envDir: '..',
+  // VERCEL_PROJECT_PRODUCTION_URL reaches the app so the runtime head claims
+  // the same origin as the prerender when VITE_SITE_URL is not set.
+  envPrefix: ['VITE_', 'VERCEL_PROJECT_PRODUCTION_URL'],
   css: {
     preprocessorOptions: {
       scss: {

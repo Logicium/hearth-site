@@ -1,27 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { siteConfig } from '../config/site.config'
 import { PLATFORM_ENABLED } from '@apotome/archetype-shared/platform/config'
 import { adminRoutes } from '@apotome/archetype-shared/admin/routes'
-import { requireVariant } from '@apotome/archetype-shared/platform/variantGuard'
 import { installAnalytics } from '@apotome/archetype-shared/platform/track'
-
+import { notFoundRoute, publicRoutes } from '../routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', name: 'home', component: () => import('../views/HomeView.vue') },
-    { path: '/rooms', name: 'rooms', component: () => import('../views/RoomsView.vue') },
-    { path: '/book', name: 'book', component: () => import('../views/BookView.vue') },
-    // Always registered; the guard keeps it paid-only. Omitting the route
-    // here would strand upgraded sites, whose variant only arrives after
-    // this module has already been evaluated.
-    {
-      path: '/gallery',
-      name: 'gallery',
-      component: () => import('../views/GalleryView.vue'),
-      beforeEnter: requireVariant('portfolio', () => siteConfig.variant),
-    },
+    // Public pages and their SEO records live in src/routes.ts; the prerender
+    // walks the same list.
+    ...publicRoutes,
+    // Admin is only mounted when the platform switch is on.
     ...(PLATFORM_ENABLED ? adminRoutes : []),
+    notFoundRoute,
   ],
   scrollBehavior: () => ({ top: 0 }),
 })
